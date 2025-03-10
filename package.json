@@ -1,0 +1,31 @@
+{
+  "name": "gitbot",
+  "version": "1.0.0",
+  "description": "A Discord bot that allows users to list and create GitHub issues",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "register": "node register-commands.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "github",
+    "issues"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@octokit/auth-app": "^7.1.5",
+    "@octokit/rest": "^21.1.1",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "node-persist": "^4.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

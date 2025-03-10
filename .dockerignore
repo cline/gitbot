@@ -1,0 +1,28 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies
+node_modules
+npm-debug.log
+
+# Environment variables
+.env
+.env.*
+
+# Data directories
+data/
+
+# Development files
+*.md
+.vscode/
+.idea/
+*.log
+
+# GitHub App private key
+*.pem
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore

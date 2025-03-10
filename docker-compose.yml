@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: github-discord-bot
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/usr/src/app/data
+      # Optional: Mount your GitHub private key if using file path
+      # - ./private-key.pem:/usr/src/app/private-key.pem:ro
+    environment:
+      # Override these in .env file
+      - DISCORD_TOKEN
+      - DISCORD_CLIENT_ID
+      - GITHUB_APP_ID
+      - GITHUB_APP_PRIVATE_KEY
+      - GITHUB_APP_PRIVATE_KEY_PATH
+      - GITHUB_APP_INSTALLATION_ID
+      - DEFAULT_GITHUB_REPO
