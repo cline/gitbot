@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 // Import required modules
-const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, REST, Routes, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -104,30 +104,117 @@ client.on('guildCreate', async guild => {
   await registerGuildCommands(guild.id);
 });
 
-// Import admin utilities
+// Import utilities
 const { hasOwner, isAdminOrOwner } = require('./utils/admin');
+const { createGitHubClient } = require('./utils/github');
+const { addUserIssue } = require('./utils/storage');
 
 // Handle command interactions
 client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return;
+  if (interaction.isCommand()) {
+    const command = client.commands.get(interaction.commandName);
 
-  const command = client.commands.get(interaction.commandName);
-
-  if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
-    return;
-  }
-
-  try {
-    // Execute the command
-    await command.execute(interaction);
-    
-    // Register guild commands if this was a register-bot command
-    if (interaction.commandName === 'register-bot') {
-      await registerGuildCommands(interaction.guildId);
+    if (!command) {
+      console.error(`No command matching ${interaction.commandName} was found.`);
+      return;
     }
-  } catch (error) {
-    console.error('Error executing command:', error);
+
+    try {
+      // Execute the command
+      await command.execute(interaction);
+      
+      // Register guild commands if this was a register-bot command
+      if (interaction.commandName === 'register-bot') {
+        await registerGuildCommands(interaction.guildId);
+      }
+    } catch (error) {
+      console.error('Error executing command:', error);
+    }
+  } else if (interaction.isModalSubmit() && interaction.customId === 'issue-form') {
+    try {
+      // Get stored data
+      const storedData = interaction.client.tempStorage.get(interaction.user.id);
+      if (!storedData) {
+        await interaction.reply({
+          content: 'Error: Could not find stored issue data. Please try creating the issue again.',
+          flags: ['Ephemeral'],
+        });
+        return;
+      }
+      const { title, repository } = storedData;
+      
+      // Get form values
+      const operatingSystem = interaction.fields.getTextInputValue('operating-system');
+      
+      // Validate operating system
+      const validOS = ['OSX', 'Windows', 'Linux'];
+      if (!validOS.includes(operatingSystem)) {
+        await interaction.reply({
+          content: `Invalid operating system. Please enter one of: ${validOS.join(', ')}`,
+          flags: ['Ephemeral'],
+        });
+        return;
+      }
+      const clineVersion = interaction.fields.getTextInputValue('cline-version');
+      const whatHappened = interaction.fields.getTextInputValue('what-happened');
+      const stepsToReproduce = interaction.fields.getTextInputValue('steps');
+
+      // Format the issue body
+      const body = `## Operating System
+${operatingSystem}
+
+## Cline Version
+${clineVersion}
+
+## What Happened
+${whatHappened}
+
+## Steps to Reproduce
+${stepsToReproduce}
+
+---
+*Created via Discord by ${interaction.user.tag}*`;
+
+      // Create GitHub client
+      const octokit = await createGitHubClient();
+      const [owner, repo] = repository.split('/');
+
+      // Create the issue on GitHub
+      const { data: issue } = await octokit.issues.create({
+        owner,
+        repo,
+        title,
+        body,
+      });
+
+      // Add the issue to the user's stored issues
+      issue.repository = repository;
+      await addUserIssue(interaction.user.id, issue);
+
+      // Create an embed for the created issue
+      const embed = new EmbedBuilder()
+        .setColor(0x00FF00)
+        .setTitle('Issue Created Successfully')
+        .setDescription(`Your issue has been created in ${repository}`)
+        .addFields(
+          { name: 'Issue Number', value: `#${issue.number}`, inline: true },
+          { name: 'Title', value: issue.title, inline: true },
+          { name: 'Link', value: `[View Issue](${issue.html_url})` }
+        )
+        .setTimestamp()
+        .setFooter({ text: 'GitHub Issues', iconURL: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' });
+
+      await interaction.reply({ embeds: [embed], flags: ['Ephemeral'] });
+
+      // Clean up stored data
+      interaction.client.tempStorage.delete(interaction.user.id);
+    } catch (error) {
+      console.error('Error handling modal submit:', error);
+      await interaction.reply({
+        content: 'An error occurred while creating the issue. Please try again later.',
+        flags: ['Ephemeral'],
+      });
+    }
   }
 });
 

@@ -6,7 +6,7 @@ This document provides a quick reference for all available commands in the Disco
 
 | Command | Description | Options |
 |---------|-------------|---------|
-| `/create-issue` | Create a new GitHub issue | `title` (required): The title of the issue<br>`body` (required): The body/description of the issue |
+| `/create-issue` | Create a new GitHub issue using a form | `title` (required): The title of the issue<br>`repository` (optional): The GitHub repository (format: owner/repo)<br>*Opens a form with fields for:*<br>- Operating System (OSX/Windows/Linux)<br>- Cline Version<br>- What Happened<br>- Steps to Reproduce |
 | `/list-issues` | List GitHub issues | `state` (optional): Filter issues by state (open, closed, all) |
 | `/close-issue` | Close a GitHub issue | `number` (required): The issue number to close<br>`reason` (optional): The reason for closing the issue |
 
