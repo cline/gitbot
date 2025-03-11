@@ -9,9 +9,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./data:/usr/src/app/data
-      # Optional: Mount your GitHub private key if using file path
-      # - ./private-key.pem:/usr/src/app/private-key.pem:ro
+      - ./data:/data
     environment:
       # Override these in .env file
       - DISCORD_TOKEN

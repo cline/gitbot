@@ -126,8 +126,7 @@ You have two options for providing the GitHub App private key:
    - Uncomment the private key volume mount in `docker-compose.yml`:
      ```yaml
      volumes:
-       - ./data:/usr/src/app/data
-       - ./private-key.pem:/usr/src/app/private-key.pem:ro
+       - ./data:/data
      ```
 3. Set the path in your `.env` file:
    ```
@@ -244,6 +243,7 @@ The bot stores data in the following directories:
 
 - `data/storage/` - Associations between Discord users and GitHub issues
 - `data/admin/` - Admin system configuration (owners, admins, blocked users)
+- `data/keys/` - Key location for private-keys
 
 When using Docker, these directories are persisted through a volume mount to `./data` in your project directory.
 
