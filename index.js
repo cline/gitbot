@@ -5,6 +5,26 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, REST, Routes, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
+
+// Create healthcheck server
+const healthServer = http.createServer((req, res) => {
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      pid: process.pid
+    }));
+  } else {
+    res.writeHead(404);
+    res.end();
+  }
+});
+
+healthServer.listen(8080, () => {
+  console.log('Healthcheck server running on port 8080');
+});
 
 // Create a new Discord client
 const client = new Client({

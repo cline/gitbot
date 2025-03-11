@@ -16,5 +16,8 @@ COPY . .
 # Create volume mount points
 VOLUME ["/usr/src/app/data"]
 
+# Expose healthcheck port
+EXPOSE 8080
+
 # Start the bot
 CMD ["npm", "start"]

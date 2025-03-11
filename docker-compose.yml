@@ -6,6 +6,8 @@ services:
     container_name: github-discord-bot
     restart: unless-stopped
     env_file: .env
+    ports:
+      - "8080:8080"
     volumes:
       - ./data:/usr/src/app/data
       # Optional: Mount your GitHub private key if using file path
