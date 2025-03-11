@@ -16,5 +16,7 @@ COPY . ./
 # Expose healthcheck port
 EXPOSE 8080
 
+RUN ls -al /
+
 # Start the bot
 CMD ["node", "index.js"]
