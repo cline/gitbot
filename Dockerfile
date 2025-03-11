@@ -13,6 +13,8 @@ RUN npm install --omit=dev
 # Copy app source
 COPY . ./
 
+RUN mkdir /data
+
 # Expose healthcheck port
 EXPOSE 8080
 
