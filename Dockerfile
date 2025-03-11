@@ -20,4 +20,4 @@ VOLUME ["/usr/src/app/data"]
 EXPOSE 8080
 
 # Start the bot
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
