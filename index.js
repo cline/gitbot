@@ -6,12 +6,14 @@ const { Client, GatewayIntentBits, Collection, REST, Routes, EmbedBuilder } = re
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const PORT = process.env.PORT || '8080';
 
 // Create healthcheck server
 const healthServer = http.createServer((req, res) => {
   if (req.url === '/') {
     res.writeHead(200);
     res.end();
+    return;
   }
   if (req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -20,14 +22,16 @@ const healthServer = http.createServer((req, res) => {
       timestamp: new Date().toISOString(),
       pid: process.pid
     }));
+    return;
   } else {
     res.writeHead(404);
     res.end();
+    return;
   }
 });
 
-healthServer.listen(process.env.PORT, () => {
-  console.log('Healthcheck server running on port 8080');
+healthServer.listen(PORT, () => {
+  console.log(`Healthcheck server running on port ${PORT}`);
 });
 
 // Create a new Discord client
