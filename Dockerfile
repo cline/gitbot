@@ -1,5 +1,5 @@
 # Use Node.js LTS version
-FROM node:20-slim
+FROM node:23-slim
 
 # Create app directory
 WORKDIR /usr/src/app
