@@ -9,6 +9,10 @@ const http = require('http');
 
 // Create healthcheck server
 const healthServer = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.writeHead(200);
+    res.end();
+  }
   if (req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
