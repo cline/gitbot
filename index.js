@@ -22,7 +22,7 @@ const healthServer = http.createServer((req, res) => {
   }
 });
 
-healthServer.listen(8080, () => {
+healthServer.listen(process.env.PORT, () => {
   console.log('Healthcheck server running on port 8080');
 });
 
