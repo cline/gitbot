@@ -10,11 +10,6 @@ const PORT = process.env.PORT || '8080';
 
 // Create healthcheck server
 const healthServer = http.createServer((req, res) => {
-  if (req.url === '/') {
-    res.writeHead(200);
-    res.end();
-    return;
-  }
   if (req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -23,11 +18,10 @@ const healthServer = http.createServer((req, res) => {
       pid: process.pid
     }));
     return;
-  } else {
-    res.writeHead(404);
-    res.end();
-    return;
   }
+  res.writeHead(404);
+  res.end();
+  return;
 });
 
 healthServer.listen(PORT, () => {
