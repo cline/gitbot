@@ -18,5 +18,9 @@ RUN mkdir /data
 # Expose healthcheck port
 EXPOSE 8080
 
+RUN ls -al /
+RUN ls -al /app
+RUN ls -al /data
+
 # Start the bot
 CMD ["node", "index.js"]
