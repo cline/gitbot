@@ -13,12 +13,8 @@ RUN npm install --omit=dev
 # Copy app source
 COPY . /app/
 
-RUN mkdir /app/data
-
 # Expose healthcheck port
 EXPOSE 8080
-
-RUN ls -al /app
 
 # Start the bot
 CMD ["node", "index.js"]
