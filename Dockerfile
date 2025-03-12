@@ -5,13 +5,13 @@ FROM node:23-slim
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./app
+COPY package*.json ./app/
 
 # Install dependencies
 RUN npm install --omit=dev
 
 # Copy app source
-COPY . ./app
+COPY . ./app/
 
 RUN mkdir /app/data
 
