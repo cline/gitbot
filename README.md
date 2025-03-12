@@ -127,6 +127,7 @@ You have two options for providing the GitHub App private key:
      ```yaml
      volumes:
        - ./data:/data
+       - ./keys/private-key.pem:/keys/private-key.pem:ro
      ```
 3. Set the path in your `.env` file:
    ```
