@@ -117,4 +117,5 @@ settings.json
 
 # Data directory (except the initial file)
 data/*
+keys/*
 !data/userIssues.json

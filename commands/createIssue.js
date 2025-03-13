@@ -1,6 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
-const { addUserIssue } = require('../utils/storage');
-const { createGitHubClient } = require('../utils/github');
+const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { isBlocked, hasOwner } = require('../utils/admin');
 
 module.exports = {
@@ -10,11 +8,7 @@ module.exports = {
     .addStringOption(option =>
       option.setName('title')
         .setDescription('The title of the issue')
-        .setRequired(true))
-    .addStringOption(option =>
-      option.setName('repository')
-        .setDescription('The GitHub repository (format: owner/repo)')
-        .setRequired(false)),
+        .setRequired(true)),
 
   async execute(interaction) {
     try {

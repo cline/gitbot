@@ -154,47 +154,48 @@ client.on('interactionCreate', async interaction => {
     }
   } else if (interaction.isModalSubmit() && interaction.customId === 'issue-form') {
     try {
+      // Acknowledge the interaction immediately to prevent timeout
+      await interaction.deferReply({ ephemeral: true });
+      
       // Get stored data
       const storedData = interaction.client.tempStorage.get(interaction.user.id);
       if (!storedData) {
-        await interaction.reply({
+        await interaction.editReply({
           content: 'Error: Could not find stored issue data. Please try creating the issue again.',
-          flags: ['Ephemeral'],
         });
         return;
       }
       const { title, repository } = storedData;
       
+      const whatHappened = interaction.fields.getTextInputValue('what-happened');
+      const stepsToReproduce = interaction.fields.getTextInputValue('steps');
+
       // Get form values
       const operatingSystem = interaction.fields.getTextInputValue('operating-system');
       
       // Validate operating system
       const validOS = ['OSX', 'Windows', 'Linux'];
       if (!validOS.includes(operatingSystem)) {
-        await interaction.reply({
+        await interaction.editReply({
           content: `Invalid operating system. Please enter one of: ${validOS.join(', ')}`,
-          flags: ['Ephemeral'],
         });
         return;
       }
       const clineVersion = interaction.fields.getTextInputValue('cline-version');
-      const whatHappened = interaction.fields.getTextInputValue('what-happened');
-      const stepsToReproduce = interaction.fields.getTextInputValue('steps');
 
       // Format the issue body
-      const body = `## Operating System
-${operatingSystem}
-
-## Cline Version
-${clineVersion}
-
-## What Happened
+      const body = `### What happened?
 ${whatHappened}
 
-## Steps to Reproduce
+### Steps to reproduce
 ${stepsToReproduce}
 
----
+### Operating System
+${operatingSystem}
+
+### Cline Version
+${clineVersion}
+
 *Created via Discord by ${interaction.user.tag}*`;
 
       // Create GitHub client
@@ -226,16 +227,23 @@ ${stepsToReproduce}
         .setTimestamp()
         .setFooter({ text: 'GitHub Issues', iconURL: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' });
 
-      await interaction.reply({ embeds: [embed], flags: ['Ephemeral'] });
+      await interaction.editReply({ embeds: [embed] });
 
       // Clean up stored data
       interaction.client.tempStorage.delete(interaction.user.id);
     } catch (error) {
       console.error('Error handling modal submit:', error);
-      await interaction.reply({
-        content: 'An error occurred while creating the issue. Please try again later.',
-        flags: ['Ephemeral'],
-      });
+      // Check if the interaction has already been acknowledged
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({
+          content: 'An error occurred while creating the issue. Please try again later.',
+        });
+      } else {
+        await interaction.reply({
+          content: 'An error occurred while creating the issue. Please try again later.',
+          ephemeral: true
+        });
+      }
     }
   }
 });
