@@ -20,21 +20,6 @@ module.exports = {
         .setCustomId('issue-form')
         .setTitle('Create GitHub Issue');
 
-      // Operating System input
-      const osInput = new TextInputBuilder()
-        .setCustomId('operating-system')
-        .setLabel('Operating System')
-        .setStyle(TextInputStyle.Short)
-        .setPlaceholder('Enter: OSX, Windows, or Linux')
-        .setRequired(true);
-
-      // Cline Version input
-      const versionInput = new TextInputBuilder()
-        .setCustomId('cline-version')
-        .setLabel('Cline Version')
-        .setStyle(TextInputStyle.Short)
-        .setRequired(true);
-
       // What Happened textarea
       const whatHappenedInput = new TextInputBuilder()
         .setCustomId('what-happened')
@@ -50,14 +35,39 @@ module.exports = {
         .setPlaceholder('1.\n2.\n3.')
         .setRequired(true);
 
+      // Provider/Model input
+      const providerModelInput = new TextInputBuilder()
+        .setCustomId('provider-model')
+        .setLabel('Provider/Model')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g., cline:anthropic/claude-3.7-sonnet, gemini:gemini-2.5-pro-exp-03-25')
+        .setRequired(true);
+
+      // Operating System input
+      const osInput = new TextInputBuilder()
+        .setCustomId('operating-system')
+        .setLabel('Operating System')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g., Windows 11, macOS Sonoma, Ubuntu 22.04')
+        .setRequired(true);
+
+      // Cline Version input
+      const versionInput = new TextInputBuilder()
+        .setCustomId('cline-version')
+        .setLabel('Cline Version')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g., 1.2.3')
+        .setRequired(true);
+
       // Add inputs to action rows
-      const osRow = new ActionRowBuilder().addComponents(osInput);
-      const versionRow = new ActionRowBuilder().addComponents(versionInput);
       const whatHappenedRow = new ActionRowBuilder().addComponents(whatHappenedInput);
       const stepsRow = new ActionRowBuilder().addComponents(stepsInput);
+      const providerModelRow = new ActionRowBuilder().addComponents(providerModelInput);
+      const osRow = new ActionRowBuilder().addComponents(osInput);
+      const versionRow = new ActionRowBuilder().addComponents(versionInput);
 
       // Add action rows to modal
-      modal.addComponents(osRow, versionRow, whatHappenedRow, stepsRow);
+      modal.addComponents(whatHappenedRow, stepsRow, providerModelRow, osRow, versionRow);
 
       // Store title and repository in temporary storage for the modal submission handler
       interaction.client.tempStorage = interaction.client.tempStorage || new Map();
