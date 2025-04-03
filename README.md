@@ -6,10 +6,11 @@ A Discord bot that allows users to list and create GitHub issues directly from D
 
 - List GitHub issues from a specified repository (with state filtering)
 - Create new GitHub issues using a structured form with fields for:
-  - Operating System (OSX/Windows/Linux)
-  - Cline Version
   - What Happened
   - Steps to Reproduce
+  - Provider/Model (e.g., cline:anthropic/claude-3.7-sonnet)
+  - Operating System (e.g., Windows 11, macOS Sonoma, Ubuntu 22.04)
+  - Cline Version
 - Close GitHub issues (with optional reason)
 - Associate Discord users with their GitHub issues
 - Persistent storage of user-issue associations

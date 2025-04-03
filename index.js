@@ -172,16 +172,8 @@ client.on('interactionCreate', async interaction => {
 
       // Get form values
       const operatingSystem = interaction.fields.getTextInputValue('operating-system');
-      
-      // Validate operating system
-      const validOS = ['OSX', 'Windows', 'Linux'];
-      if (!validOS.includes(operatingSystem)) {
-        await interaction.editReply({
-          content: `Invalid operating system. Please enter one of: ${validOS.join(', ')}`,
-        });
-        return;
-      }
       const clineVersion = interaction.fields.getTextInputValue('cline-version');
+      const providerModelUsed = interaction.fields.getTextInputValue('provider-model');
 
       // Format the issue body
       const body = `### What happened?
@@ -189,6 +181,9 @@ ${whatHappened}
 
 ### Steps to reproduce
 ${stepsToReproduce}
+
+### Provider/Model
+${providerModelUsed}
 
 ### Operating System
 ${operatingSystem}
